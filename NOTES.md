@@ -18,10 +18,11 @@ The application has been upgraded to a unified AI-agentic architecture. It no lo
 *   **Fixed:** Deleted `templates.js`. The LLM generates recommendations based on the specific issue.
 *   **Result:** A feature request now correctly suggests logging a ticket in the backlog, while a server outage suggests escalating to DevOps.
 
-### New Architecture
-*   **Model:** Llama 3.3 70B Versatile
+### New Architecture & Features
+*   **AI Model:** Llama 3.3 70B Versatile
 *   **Format:** JSON Mode (`response_format: { type: "json_object" }`)
-*   **Temperature:** 0.1 (For higher precision and consistency in categorization)
+*   **Temperature:** 0.1 (For higher precision and consistency)
+*   **Dark Mode:** Implemented full dark mode support using Tailwind CSS and React Context. User preferences are persisted in `localStorage`.
 
 ## Verification Status
 

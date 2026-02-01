@@ -21,9 +21,10 @@
     - Map categories to specific, valid playbooks (e.g., Server Down -> Escalate to DevOps; Payment Fail -> Check Stripe Logs).
 
 ## Phase 3: Validation & Polish
-- [ ] Create a test suite of example messages (including the ones identified as failures).
-- [ ] Verify that the new logic correctly processes all test cases.
-- [ ] Update frontend to display the richer AI-generated data (e.g., confidence scores, tailored next steps).
+- [x] Create a test suite of example messages (including the ones identified as failures).
+- [x] Verify that the new logic correctly processes all test cases.
+- [x] Update frontend to display the richer AI-generated data.
+- [x] **Implement Dark Mode** (Feat: Added theme persistence and toggle).
 
 ## Phase 4: Future Improvements
 - [ ] Add "Feedback Loop" to allow users to correct the AI and improve future accuracy.
