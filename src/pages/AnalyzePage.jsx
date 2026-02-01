@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { categorizeMessage } from '../utils/llmHelper'
-import { calculateUrgency } from '../utils/urgencyScorer'
-import { getRecommendedAction } from '../utils/templates'
 
 function AnalyzePage() {
   const [message, setMessage] = useState('')
@@ -26,31 +24,22 @@ function AnalyzePage() {
 
     setIsLoading(true)
     setResults(null)
-    
+
     try {
-      // Run categorization (LLM call)
-      const { category, reasoning } = await categorizeMessage(message)
-      
-      // Calculate urgency (rule-based)
-      const urgency = calculateUrgency(message)
-      
-      // Get recommended action (template-based)
-      const recommendedAction = getRecommendedAction(category)
-      
-      const analysisResult = {
+      // Run unified categorization (LLM call)
+      const analysisResult = await categorizeMessage(message)
+
+      const finalResult = {
+        ...analysisResult,
         message,
-        category,
-        urgency,
-        recommendedAction,
-        reasoning,
         timestamp: new Date().toISOString()
       }
 
-      setResults(analysisResult)
+      setResults(finalResult)
 
       // Save to history
       const history = JSON.parse(localStorage.getItem('triageHistory') || '[]')
-      history.push(analysisResult)
+      history.push(finalResult)
       localStorage.setItem('triageHistory', JSON.stringify(history))
     } catch (error) {
       console.error('Error analyzing message:', error)
@@ -96,11 +85,10 @@ function AnalyzePage() {
             <button
               onClick={handleAnalyze}
               disabled={isLoading}
-              className={`flex-1 py-3 rounded-lg font-semibold ${
-                isLoading
+              className={`flex-1 py-3 rounded-lg font-semibold ${isLoading
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-blue-600 text-white hover:bg-blue-700'
-              }`}
+                }`}
             >
               {isLoading ? (
                 <span className="flex items-center justify-center">
@@ -128,7 +116,7 @@ function AnalyzePage() {
         {results && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Analysis Results</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <div className="text-sm font-semibold text-gray-600 mb-1">Category</div>
@@ -139,11 +127,10 @@ function AnalyzePage() {
 
               <div>
                 <div className="text-sm font-semibold text-gray-600 mb-1">Urgency Level</div>
-                <div className={`inline-block px-4 py-2 rounded-lg font-semibold ${
-                  results.urgency === 'High' ? 'bg-red-200 text-red-900' :
-                  results.urgency === 'Medium' ? 'bg-yellow-200 text-yellow-900' :
-                  'bg-green-200 text-green-900'
-                }`}>
+                <div className={`inline-block px-4 py-2 rounded-lg font-semibold ${results.urgency === 'High' ? 'bg-red-200 text-red-900' :
+                    results.urgency === 'Medium' ? 'bg-yellow-200 text-yellow-900' :
+                      'bg-green-200 text-green-900'
+                  }`}>
                   {results.urgency}
                 </div>
               </div>
